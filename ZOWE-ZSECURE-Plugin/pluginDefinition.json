@@ -1,0 +1,43 @@
+{
+  "identifier": "com.ibm.au.zsec",
+  "apiVersion": "1.0.0",
+  "pluginVersion": "1.0.0",
+  "pluginType": "application",
+  "webContent": {
+    "framework": "angular2",
+    "launchDefinition": {
+      "pluginShortNameKey": "zsec",
+      "pluginShortNameDefault": "zSecure",
+      "imageSrc": "assets/icon.png"
+    },
+    "descriptionKey": "ZOWE zSecure plugin",
+    "descriptionDefault": "DASD Scan",
+    "isSingleWindowApp": true,
+    "defaultWindowStyle": {
+      "width": 1100,
+      "height": 600,
+      "x": 200,
+      "y": 50
+    }
+  },
+  "configurationData": {
+    "resources": {
+      "preferences": {
+        "aggregationPolicy": "override",
+        "subResources": {
+          "serverOptions": {
+            "aggregationPolicy": "override"
+          }
+        }
+      },
+      "requests": {
+        "aggregationPolicy": "override",
+        "subResources": {
+          "app": {
+            "aggregationPolicy": "override"
+          }
+        }
+      }
+    }
+  }
+}

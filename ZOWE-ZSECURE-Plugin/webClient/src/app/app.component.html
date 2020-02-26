@@ -1,0 +1,109 @@
+<style>
+  .tsotext {
+    background-color: #000;
+    border: 1px solid #000;
+    color: red;
+    padding: 8px;
+    font-family: courier new;
+    height: 90%;
+    width: 100%;
+  }
+</style>
+<div class="container-fluid d-flex flex-column dscan-component tsotext flex-grow-1" style="width : 100%; height: 100%; background-color: black">
+
+  <!--INITIAL SEARCH PAGE---->
+  <div *ngIf="loggedin==='false' && loggedin !== 'attempting'" class="d-flex flex-column justify-content-center pt-4">
+    <div class="d-flex flex-column justify-content-center form-group p-5">
+      <h5 class="text-warning">Work In Progress</h5>
+      <p class="text-light">This plugin is available on the GSDPS github:
+        <a href="https://github.ibm.com/GSDPS/ZOWE-OPTION6-Plugin">https://github.ibm.com/GSDPS/ZOWE-OPTION6-Plugin</a>
+      </p>
+
+
+      <div class="d-flex flex-row justify-content-center">
+        <h4 class="pr-2 text-light">Username: </h4>
+        <input id="username" [(ngModel)]="username" type="text" class="pl-2" style="width: 150px;">
+      </div>
+      <div class="d-flex flex-row justify-content-center pt-3">
+        <h4 class="pr-2 text-light">Password: </h4>
+        <input id="password" [(ngModel)]="password" type="password" class="pl-2" style="width: 150px;"
+          (keydown.enter)="login(username, password)">
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+  <div class="d-flex justify-content-center" *ngIf="tsostarted ==='true'">
+    <p class="text-muted">
+      TSO session started for {{username}}
+    </p>
+  </div>
+  <div class="d-flex justify-content-center" *ngIf="tsostarted ==='false'">
+    <p class="text-muted">
+      TSO session not started
+    </p>
+  </div>
+  <div class="d-flex justify-content-center" *ngIf="loggedin ==='attempting'">
+    <p class="text-muted">
+      Attempting to log in
+    </p>
+    <!--------LOADING---------->
+    <div *ngIf="loggedin==='attempting'">
+      <span style="font-size: 18px; color: red;">
+        <i class="fa fa-spinner fa-pulse fa-3x"></i>
+      </span>
+    </div>
+
+    <!------------------------->
+  </div>
+  <div class="d-flex flex-row justify-content-center tsotext" style="width : 100%;">
+    <div *ngIf="initialDisplay==='shown'  && loggedin === 'true'" style="width : 100%; height: 100%;">
+      <div class="mb-4 tsotext" style="width : 100%; height: 100%;">
+        <div class="d-flex flex-row justify-content-between" style="width : 100%;">
+          <label for="tsooutput">Output: </label>
+          <button class="btn btn-danger btn-sm" (click)="tsooutput=''; relog(username, password);">Relog</button>
+        </div>
+
+        <div [(ngModel)]="tsooutput" class="border border-danger pb-3"
+          style="overflow:auto; width : 100%; height: 40%;">
+          <pre style="color: red; font-family: courier new; font-size: 15px; -webkit-user-select: text;
+          -moz-user-select: text; -ms-user-select: text; user-select: text ; " class="p-2">{{msgOutput}}</pre>
+        </div>
+        <div class="tsotext flex-grow-1" style="width : 100%; height: 50%;">  
+          <label class="pt-4" for="textarea">Type your RACF command here:</label>
+         
+          <input type="text" id="textarea" class="form-control" style="background-color: #000; color: red;" rows="1"
+                        #tta (keydown.enter)="tsooutput=''; sendTSOCommand(tta.value); tta.value=''">
+
+          <p class="pt-3">Previously Run Commands:</p>
+          <div class="tsotext pt-1" style="overflow:auto; width : 100%; height: 40%"> 
+            <div *ngFor="let cmd of prevCMDs" style="background-color: #000;">
+              <a style=" color: red;" (click)="tta.value=cmd" href="#">
+                {{cmd}}
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+
+  <!------------------------->
+
+  <!------------------------->
+
+
+
+
+
+</div>
+<zlux-popup-manager>
+</zlux-popup-manager>

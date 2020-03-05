@@ -1,5 +1,5 @@
 {
-  "name": "com.ibm.au.aazd.gsdps.dscan",
+  "name": "com.ibm.au.zsec",
   "version": "1.0.0",
   "scripts": {
     "start": "webpack --progress --colors --watch",

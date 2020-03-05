@@ -9,7 +9,8 @@
     width: 100%;
   }
 </style>
-<div class="container-fluid d-flex flex-column dscan-component tsotext flex-grow-1" style="width : 100%; height: 100%; background-color: black">
+<div class="container-fluid d-flex flex-column dscan-component tsotext flex-grow-1"
+  style="width : 100%; height: 100%; background-color: black">
 
   <!--INITIAL SEARCH PAGE---->
   <div *ngIf="loggedin==='false' && loggedin !== 'attempting'" class="d-flex flex-column justify-content-center pt-4">
@@ -72,15 +73,15 @@
           <pre style="color: red; font-family: courier new; font-size: 15px; -webkit-user-select: text;
           -moz-user-select: text; -ms-user-select: text; user-select: text ; " class="p-2">{{msgOutput}}</pre>
         </div>
-        <div class="tsotext flex-grow-1" style="width : 100%; height: 50%;">  
+        <div class="tsotext flex-grow-1" style="width : 100%; height: 50%;">
           <label class="pt-4" for="textarea">Type your RACF command here:</label>
-         
-          <input type="text" id="textarea" class="form-control" style="background-color: #000; color: red;" rows="1"
-                        #tta (keydown.enter)="tsooutput=''; sendTSOCommand(tta.value); tta.value=''">
+
+          <input type="text" id="textarea" class="form-control" style="background-color: #335EFF; color: red;" rows="1"
+            #tta (keydown.enter)="tsooutput=''; sendTSOCommand(tta.value); tta.value=''">
 
           <p class="pt-3">Previously Run Commands:</p>
-          <div class="tsotext pt-1" style="overflow:auto; width : 100%; height: 40%"> 
-            <div *ngFor="let cmd of prevCMDs" style="background-color: #000;">
+          <div class="tsotext pt-1" style="overflow:auto; width : 100%; height: 40%">
+            <div *ngFor="let cmd of prevCMDs" style="background-color: #335EFF;">
               <a style=" color: red;" (click)="tta.value=cmd" href="#">
                 {{cmd}}
               </a>

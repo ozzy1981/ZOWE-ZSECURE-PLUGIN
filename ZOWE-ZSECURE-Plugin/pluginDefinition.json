@@ -11,7 +11,7 @@
       "imageSrc": "assets/icon.png"
     },
     "descriptionKey": "ZOWE zSecure plugin",
-    "descriptionDefault": "DASD Scan",
+    "descriptionDefault": "zSecure",
     "isSingleWindowApp": true,
     "defaultWindowStyle": {
       "width": 1100,

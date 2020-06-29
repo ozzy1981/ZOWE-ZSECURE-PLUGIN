@@ -1,13 +1,7 @@
-import { Component, OnInit, Inject, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, AfterViewInit, ElementRef } from '@angular/core';
 import { Angular2InjectionTokens } from 'pluginlib/inject-resources';
 import { ZluxPopupManagerService, ZluxErrorSeverity } from '@zlux/widgets';
-import { Http, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { resolveDefinition } from '@angular/core/src/view/util';
 import { TsoService } from './tso.service';
-
-
-
 
 interface sessionOutput {
   servletKey: string;
@@ -30,10 +24,6 @@ interface outDATA {
   HIDDEN: string;
 }
 
-interface tsoRequest {
-  command: string;
-  ready: boolean;
-}
 
 interface MsgData {
   messageText: string;
@@ -52,26 +42,9 @@ interface MsgData {
 
 export class AppComponent implements OnInit, AfterViewInit {
 
-  
-  private error_msg: any;
-  private localRequest: boolean = false;
-  private initialDisplay = 'shown';
-  private display = 'hidden';
-  private volumeDisplay = 'hidden';
-  private errorMessage = 'hidden';
+
   private loggedin = 'false';
-  private tsostarted = 'false';
-  private showEntries = false;
-  private entries: any = null;
-  private filter: any;
-  private servletKey = '';
-  private return_text = '';
-  // private header = new Headers;
-  private requestOptions: any;
-  private requestInProgress: boolean;
-  private bigStringExample: String;
-  private system: string = '';
-  
+
 
   //targetAppId: string = "org.zowe.explorer-mvs"; 
   targetAppId: string = "com.ibm.au.sgdiag";
@@ -79,19 +52,14 @@ export class AppComponent implements OnInit, AfterViewInit {
   actionType: string = "Launch";
   targetMode: string = "PluginCreate";
   parameters: string;
-  private hasbeenloaded = false;
-  private msgOutput: String = "";
   prevCMDs: any[] = [];
   cmdString: any = "";
- 
+
 
 
   constructor(
-    @Inject(Angular2InjectionTokens.PLUGIN_DEFINITION) private pluginDefinition: ZLUX.ContainerPluginDefinition,
     @Inject(Angular2InjectionTokens.LOGGER) private log: ZLUX.ComponentLogger,
-    @Inject(Angular2InjectionTokens.LAUNCH_METADATA) private launchMetadata: any,
     private popupManager: ZluxPopupManagerService,
-    private http: Http,
     private elementRef: ElementRef,
     private tsoService: TsoService
   ) {
@@ -105,24 +73,24 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
 
-  relog(username: any, password: any)
-  {
+  relog(username: any, password: any, zosmfAddress: string, logonProc: string, characterSet: string, characterPage: string,
+    tsoRows: number, tsoColumns: number, regionSize: number, accountInformation: string) {
     this.sendTSOCommand('logoff');
     this.loggedin = 'false';
     this.resetView();
-    this.login(username, password);
+    this.login(username, password, zosmfAddress, logonProc, characterSet, characterPage,
+      tsoRows, tsoColumns, regionSize, accountInformation);
   }
 
   async sendTSOCommand(cmdString: any) {
-   
+
     if (this.loggedin === 'true') {
       await this.tsoService.sendCommand(cmdString).then(async (response: sessionOutput) => {
         this.log.info('Success! sendTSOCommand' + cmdString);
         await this.tsoService.getMessage(response).then((messageOutput: String) => {
-          
+
           this.log.info(messageOutput);
-          this.msgOutput = messageOutput.trim();
-          
+
         }, (error) => {
           this.log.info('MessageOutput failed' + error);
         })
@@ -138,29 +106,26 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
   resetView() {
-    this.display = 'hidden';   
-    this.errorMessage = 'hidden'; 
-    this.initialDisplay = 'shown';
-   
+
   }
 
-  async login(username: any, password: any) {
+  async login(username: any, password: any, zosmfAddress: string, logonProc: string, characterSet: string, characterPage: string,
+    tsoRows: number, tsoColumns: number, regionSize: number, accountInformation: string) {
     this.log.info(`Attempting to create TSO session on AAZT`);
     this.loggedin = 'attempting';
-    await this.tsoService.startTSO(username, password).then(async (response: sessionOutput) => {
-      this.loggedin = 'true';
-      this.tsostarted = 'true';
-      this.initialDisplay = 'shown';
-    }, (error) => {
-      this.log.info('Failed login', error);
-      const errorTitle = 'Error';
-      const errorMessage = 'Incorrect login details, please try again';
-      const options = {
-        blocking: true
-      };
-      this.popupManager.reportError(ZluxErrorSeverity.ERROR, errorTitle.toString(), errorMessage, options);
-      this.loggedin = 'false';
-    })
+    await this.tsoService.startTSO(username, password, zosmfAddress, logonProc, characterSet, characterPage,
+      tsoRows, tsoColumns, regionSize, accountInformation).then(async () => {
+        this.loggedin = 'true';
+      }, (error: any) => {
+        this.log.info('Failed login', error);
+        const errorTitle = 'Error';
+        const errorMessage = 'Incorrect login details, please try again';
+        const options = {
+          blocking: true
+        };
+        this.popupManager.reportError(ZluxErrorSeverity.ERROR, errorTitle.toString(), errorMessage, options);
+        this.loggedin = 'false';
+      })
   }
 
   sendAppRequest(parameters: string) {
@@ -224,7 +189,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // below function is for sending params to another app and opening it
   // openSGDIAG(storageGroup: string) {
-    
+
   //   this.parameters = 
   //   `
   //   {"type":"load",
@@ -239,7 +204,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   //   console.log("clicked to run SGDIAG against " + storageGroup);
   //   this.sendAppRequest(this.parameters);
   // }
-  
+
 
 
 }

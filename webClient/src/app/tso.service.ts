@@ -1,7 +1,6 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Angular2InjectionTokens } from 'pluginlib/inject-resources';
 
 export interface sessionOutput {
   servletKey: string;
@@ -65,7 +64,7 @@ export class TsoService {
     const jobObj: any = {
       "TSO RESPONSE": {
         "VERSION": "0100",
-        "DATA": command 
+        "DATA": command
       }
     };
     return this.http.put('https://' + this.zosmfAddress + '/tsoApp/tso/' + servletKey, JSON.stringify(jobObj), this.requestOptions).map(res => res.json());
@@ -96,13 +95,13 @@ export class TsoService {
           if (this.servletKey === null) {
             reject(res.msgData[0].messageText);
           }
-          await this.getMessage(res).then((logoninfo: any) => {
+          await this.getMessage(res).then(() => {
             this.tsostarted = 'true';
             this.loggedin = 'true';
             resolve(true);
           })
         },
-        err => {
+        () => {
           // this.log.info('Session creation failed.');
           this.tsostarted = 'false';
           this.loggedin = 'false';
@@ -120,21 +119,21 @@ export class TsoService {
           // this.log.info('Successful Send Command.');
           resolve(res);
         },
-        err => {
+        () => {
           // this.log.info('Session creation failed.' + err);
           reject('failed');
         });
     })
   }
 
-  async innerMessage(servletKey: string) {
+  async innerMessage() {
     return new Promise(async (resolve, reject) => {
       let message = await this.getTsoMessage(this.servletKey)
       message.subscribe(
         res => {
           resolve(res);
         },
-        err => {
+        () => {
           // this.log.info('Session creation failed.' + err);
           reject('innerMessage timeout');
         });
@@ -151,9 +150,9 @@ export class TsoService {
     return new Promise(async (resolve, reject) => {
       while (!done) {
         if (!firstLoop) {
-          await this.innerMessage(this.servletKey).then((res: sessionOutput) => {
+          await this.innerMessage().then((res: sessionOutput) => {
             message = res;
-          }, (error) => {
+          }, () => {
             // this.log.info('MessageOutput failed' + error);
           })
         }
@@ -200,7 +199,7 @@ export class TsoService {
         // this.log.info(res);
         this.servletKey = res.servletKey;
       },
-      err => {
+      () => {
         // this.log.info('Session creation failed.');
       });
   }

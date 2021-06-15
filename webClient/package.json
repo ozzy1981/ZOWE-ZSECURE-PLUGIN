@@ -10,7 +10,7 @@
   "private": true,
   "dependencies": {
     "@ng-bootstrap/ng-bootstrap": "^2.0.0-rc.0",
-    "angular": "^1.7.8",
+    "angular": "^1.8.0",
     "angular-google-charts": "^0.1.6",
     "angular-loaders": "^1.0.0",
     "angular-resize-event": "^1.1.0",
